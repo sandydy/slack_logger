@@ -12,8 +12,8 @@ def slack_logger(event, context):
 
     try:
       response = client.chat_postMessage(
-        channel=event["channel"],
-        text=event["message"]
+        channel=os.environ["SLACK_API_CHANNEL"],
+        text=json.dumps(event)
       )
     except SlackApiError as e:
       # You will get a SlackApiError if "ok" is False
