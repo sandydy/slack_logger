@@ -1,9 +1,9 @@
-FROM python:latest
-WORKDIR /
-COPY . .
-RUN apt-get update
-RUN apt-get upgrade -y
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-ENV PYTHONPATH "${PYTHONPATH}:/"
-ENTRYPOINT ["python", "/slackclient.py"]
+FROM public.ecr.aws/lambda/python:latest
+# Copy function code
+COPY slackclient.py ${LAMBDA_TASK_ROOT}
+
+COPY requirements.txt  .
+RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
+
+# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
+CMD [ "slackclient.slack_logger" ]
